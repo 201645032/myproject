@@ -1,0 +1,73 @@
+package movieproject;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import java.*;
+import java.awt.Graphics;
+import java.awt.Image;
+public class movieinfo_Frame extends JFrame{
+	int movienum;
+	JButton btnback;
+	ImageIcon icon = new ImageIcon("img/girlinfo.jpg");
+	ImageIcon icon1 = new ImageIcon("img/buginfo.jpg");
+	ImageIcon icon2 = new ImageIcon("img/badinfo.jpg");
+	ImageIcon icon3 = new ImageIcon("img/avginfo.jpg");
+	ImageIcon back = new ImageIcon("img/back.jpg");
+	ImageIcon back_on = new ImageIcon("img/back_on.jpg");
+	public movieinfo_Frame(String title, int num)
+	{	
+		setTitle(title);
+		setSize(815,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+		setLocationRelativeTo(null);
+		movienum = num;
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g)
+			{	switch(movienum)
+				{
+				case 1:
+					g.drawImage(icon.getImage(), 0,0,null);
+					break;
+				case 2:
+					g.drawImage(icon1.getImage(), 0,0,null);
+					break;
+				case 3:
+					g.drawImage(icon2.getImage(), 0,0,null);
+					break;
+				case 4:
+					g.drawImage(icon3.getImage(), 0,0,null);
+					break;
+					default:
+					g.drawImage(icon.getImage(), 0,0,null);
+					break;
+				}
+				
+				setOpaque(false);
+				super.paintComponent(g);			
+			}
+	};
+	
+	btnback = new JButton(back);
+	btnback.setRolloverIcon(back_on);
+	btnback.setBorderPainted(false);
+	btnback.setFocusPainted(false);
+	btnback.setContentAreaFilled(false);
+	
+	btnback.setLocation(11,89);
+	btnback.setSize(132,41);
+	
+	panel.add(btnback);
+	JScrollPane j = new JScrollPane(panel);
+	setContentPane(j);
+	setVisible(true);
+};
+	public static void main(String[] args) {
+		new movieinfo_Frame("인하공전 영화예매시스템",0);
+	}
+
+}

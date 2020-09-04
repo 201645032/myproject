@@ -1,0 +1,168 @@
+package movieproject;
+
+import java.awt.AWTException;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+public class receipt_Frame extends JFrame implements ActionListener {
+	DB_Conn dc = new DB_Conn();
+	int custid;
+	String userid;
+	String seatstring;
+	int movienum;
+	String name, place, time, seatnumber;
+	ImageIcon main = new ImageIcon("img/gomain.png");
+	ImageIcon r_main = new ImageIcon("img/gomain_on.png");
+	ImageIcon save = new ImageIcon("img/save.png");
+	ImageIcon r_save = new ImageIcon("img/save_on.png");
+	ImageIcon icon = new ImageIcon("img/receip12.jpg");
+	ImageIcon icon2 = new ImageIcon("img/receip15");
+	JButton btnmain;
+	JButton btnsave;
+	
+	public receipt_Frame(String title, int num, int custnum, String id, String seat)
+	{
+		custid = custnum;
+		userid = id;
+		movienum = num;
+		seatstring = seat;
+		setTitle(title);
+		setSize(815,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		setLocationRelativeTo(null);
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g) {
+				if(movienum == 14 || movienum == 24 || movienum == 34 || movienum == 44)
+				{
+				g.drawImage(icon2.getImage(), 0,0,null);
+				}
+				else
+				{
+				g.drawImage(icon.getImage(), 0,0,null);
+				}
+				setOpaque(false);
+				super.paintComponent(g);			
+			}	
+			
+		};
+		
+		getuserinfo();
+		JLabel moviename = new JLabel(name);
+		JLabel movieplace = new JLabel(place);
+		JLabel movietime = new JLabel(time);
+		JLabel seatnumber = new JLabel(seatstring);
+		panel.setLayout(null);
+		
+		btnmain = new JButton(main);
+		btnmain.setRolloverIcon(r_main);
+		btnmain.setBorderPainted(false);
+		btnmain.setFocusPainted(false);
+		btnmain.setContentAreaFilled(false);
+		
+		btnmain.setLocation(0,5);
+		btnmain.setSize(btnmain.getPreferredSize());
+		
+		btnsave = new JButton(save);
+		btnsave.setRolloverIcon(r_save);
+		btnsave.setBorderPainted(false);
+		btnsave.setFocusPainted(false);
+		btnsave.setContentAreaFilled(false);
+		
+		btnsave.setLocation(675,5);
+		btnsave.setSize(btnsave.getPreferredSize());
+		
+		moviename.setFont(new Font("Dotum",Font.BOLD,50));
+		moviename.setForeground(Color.black);
+		moviename.setLocation(260, 230);
+		moviename.setSize(moviename.getPreferredSize());
+		
+		movieplace.setFont(new Font("Dotum",Font.BOLD,50));
+		movieplace.setForeground(Color.black);
+		movieplace.setLocation(250, 300);
+		movieplace.setSize(movieplace.getPreferredSize());
+		
+		movietime.setFont(new Font("Dotum",Font.BOLD,40));
+		movietime.setForeground(Color.black);
+		movietime.setLocation(510, 240);
+		movietime.setSize(movietime.getPreferredSize());
+		
+		seatnumber.setFont(new Font("Dotum",Font.BOLD,50));
+		seatnumber.setForeground(Color.black);
+		seatnumber.setLocation(460, 300);
+		seatnumber.setSize(seatnumber.getPreferredSize());
+		
+		btnmain.addActionListener(this);
+		btnsave.addActionListener(this);
+		panel.add(moviename); panel.add(movieplace); panel.add(movietime); panel.add(seatnumber);
+		panel.add(btnmain); panel.add(btnsave);
+		
+		
+		
+		JScrollPane j = new JScrollPane(panel);
+		setContentPane(j);
+		setVisible(true); // 출력 부분
+	}
+	private void getuserinfo() {
+		String sql = "select moviename, watchingplace, watchingtime, seatnumber from result where custid = '"+custid+"'";
+		ResultSet rs = dc.executeQuery(sql);
+		try {
+			while(rs.next())
+			{	
+				name = rs.getString("moviename");
+				place = rs.getString("watchingplace");
+				time = rs.getString("watchingtime");
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+		
+	
+	public static void main(String[] args) {
+		new receipt_Frame("인하공전 영화예매시스템", 11, 2, "201645032", "A1A2");
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object obj = e.getSource();
+		if(obj == btnsave)
+		{
+			btnsave.setVisible(false);
+			btnmain.setVisible(false);
+			try {
+				BufferedImage cap = new Robot().createScreenCapture(new Rectangle(400,140,800,600));
+				File file = new File("C:\\Users\\USER\\Desktop\\정찬영\\자바과제\\cap.jpg");
+				ImageIO.write(cap, "jpg", file);
+						
+			} catch (AWTException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			btnsave.setVisible(true);
+			btnmain.setVisible(true);
+			JOptionPane.showMessageDialog(this, "예매내역을 C드라이브에 저장했습니다.");
+		}
+	}
+	
+}

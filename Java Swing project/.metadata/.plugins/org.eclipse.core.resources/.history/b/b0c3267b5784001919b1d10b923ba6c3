@@ -1,0 +1,161 @@
+package movieproject;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+public class moviebuy_Frame extends JFrame implements ActionListener{
+	JButton btnback;
+	JLabel seat; JLabel seat1; JLabel seat2; JLabel seat3;
+	ImageIcon icon = new ImageIcon("img/girlbuy.jpg");
+	ImageIcon icon1 = new ImageIcon("img/bugbuy.jpg");
+	ImageIcon icon2 = new ImageIcon("img/badbuy.jpg");
+	ImageIcon icon3 = new ImageIcon("img/avgbuy.jpg");
+	ImageIcon back = new ImageIcon("img/back.png");
+	ImageIcon back_on = new ImageIcon("img/back_on.png");
+	int movienum;
+	int[] a = new int[3];
+	DB_Conn dc = new DB_Conn();
+	
+	public moviebuy_Frame(String title, int num)
+	{
+		setTitle(title);
+		setSize(520,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+		setLocationRelativeTo(null);
+		movienum = num;
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g)
+			{	switch(movienum)
+				{
+				case 1:
+					g.drawImage(icon.getImage(), 0,0,null);
+					break;
+				case 2:
+					g.drawImage(icon1.getImage(), 0,0,null);
+					break;
+				case 3:
+					g.drawImage(icon2.getImage(), 0,0,null);
+					break;
+				case 4:
+					g.drawImage(icon3.getImage(), 0,0,null);
+					break;
+					default:
+					g.drawImage(icon.getImage(), 0,0,null);
+					break;
+				}
+				
+				setOpaque(false);
+				super.paintComponent(g);			
+			}
+		};
+		
+		
+
+		
+		panel.setLayout(null);
+		btnback = new JButton(back);
+		btnback.setRolloverIcon(back_on);
+		btnback.setBorderPainted(false);
+		btnback.setFocusPainted(false);
+		btnback.setContentAreaFilled(false);
+		
+		btnback.setLocation(20,550);
+		btnback.setSize(132,41);
+		
+		seat = new JLabel("20 / 30");
+		seat.setFont(new Font("Gothic",Font.BOLD,20));
+		seat.setLocation(330,199);
+		seat.setForeground(Color.BLACK);
+		seat.setSize(seat.getPreferredSize()); //레이아웃이 null일 때 텍스트의 크기를 잡아주는 방법 값을 직접 넣어주니 절 때 구할 수 없었다.
+		
+		seat1 = new JLabel("20 / 30");
+		seat1.setFont(new Font("Gothic",Font.BOLD,20));
+		seat1.setLocation(330,267);
+		seat1.setForeground(Color.BLACK);
+		seat1.setSize(seat.getPreferredSize());
+		
+		seat2 = new JLabel("20 / 30");
+		seat2.setFont(new Font("Gothic",Font.BOLD,20));
+		seat2.setLocation(330,433);
+		seat2.setForeground(Color.BLACK);
+		seat2.setSize(seat.getPreferredSize());
+		
+		seat3 = new JLabel("20 / 30");
+		seat3.setFont(new Font("Gothic",Font.BOLD,20));
+		seat3.setLocation(330,501);
+		seat3.setForeground(Color.BLACK);
+		seat3.setSize(seat.getPreferredSize());
+		
+		switch(movienum)
+		{
+		
+		case 1:
+			String sql = "select seat from movie where name = '걸캅스'";
+			System.out.println(sql);
+			ResultSet rs = dc.executeQuery(sql);
+			try {
+				while(rs.next())
+				{
+					if(rs.getRow() == 1)
+					{
+						a[0] = rs.getInt(1);
+					}
+					else if(rs.getRow() == 2)
+					{
+						a[1] = rs.getInt(1);
+					}
+					else if(rs.getRow() == 3)
+					{
+						a[2] = rs.getInt(1);
+					}
+					else if(rs.getRow() == 4)
+					{
+						a[3] = rs.getInt(1);
+					}
+				}
+
+			} catch (SQLException e) {
+				
+				e.printStackTrace();
+			}
+			break;
+			default: System.out.println("답없음");
+		}
+		System.out.println(a[0]+a[1]+a[2]+a[3]);
+		btnback.addActionListener(this);
+		
+		
+		panel.add(btnback);
+		panel.add(seat);panel.add(seat1);panel.add(seat2);panel.add(seat3);
+		JScrollPane j = new JScrollPane(panel);
+		setContentPane(j);
+		setVisible(true);
+	};
+public static void main(String[] args) {
+	new moviebuy_Frame("인하공전 영화예매시스템",0);
+}
+@Override
+public void actionPerformed(ActionEvent e) {
+	// TODO Auto-generated method stub
+	Object obj = e.getSource();
+	if(obj == btnback)
+	{
+		new movieinfo_Frame("인하공전 영화예매시스템",movienum);
+		setVisible(false);
+	}
+	
+}
+}

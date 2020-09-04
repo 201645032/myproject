@@ -1,0 +1,55 @@
+package movieproject;
+
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.MalformedInputException;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Timer;
+
+public class Loginani_Frame extends JFrame{
+	ImageIcon icon = new ImageIcon("img/loginani.jpg");
+	public Loginani_Frame(String title) {
+		setTitle(title);
+		setSize(420,250);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+		setLocationRelativeTo(null);
+
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g)
+			{	g.drawImage(icon.getImage(), 0,0,null);
+				setOpaque(false);
+				super.paintComponent(g);			
+			}
+		};
+		JScrollPane j = new JScrollPane(panel);
+		Timer timer = new Timer(3000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setContentPane(j);
+				setVisible(true);
+			}
+		});
+		timer.start();
+		timer.stop();
+		new selectMovie_Frame("인하공전 영화예매시스템");
+		setVisible(false);
+	
+	}
+			
+
+
+
+	public static void main(String[] args) {
+		
+		new Loginani_Frame("인하공전 영화예매시스템");
+}
+}

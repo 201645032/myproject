@@ -1,0 +1,120 @@
+﻿package Movie;
+
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
+
+public class FindIdFrame extends JFrame implements ActionListener{
+	private JButton login;
+	private JButton findid;
+	private JButton newid;
+	private JTextField nametf;
+	private JTextField calltf;
+	private JButton okbtn;
+
+	public FindIdFrame(String title) {
+		setTitle(title);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(350,160);
+		setLocationRelativeTo(null);
+		setLayout(new FlowLayout());
+		
+		JPanel pn1 = new JPanel();
+		pn1.setLayout(new GridLayout(2,0));
+		
+		JLabel namelb = new JLabel("이름 : ");
+		namelb.setOpaque(true);
+		namelb.setBackground(Color.BLUE);
+		namelb.setForeground(Color.WHITE);			
+		
+		JLabel calllb = new JLabel("전화번호 : ");
+		calllb.setOpaque(true);
+		calllb.setBackground(Color.BLUE);
+		calllb.setForeground(Color.WHITE);
+		
+		JPanel pn2 = new JPanel();
+		pn2.setLayout(new GridLayout(2,0));
+		
+		nametf = new JTextField(20);
+		calltf = new JTextField(20);
+		
+		nametf.setMargin(new Insets(8,8,8,8));
+		calltf.setMargin(new Insets(8,8,8,8));
+		
+		pn1.add(namelb);
+		pn1.add(calllb);
+		
+		pn2.add(nametf);
+		pn2.add(calltf);
+		
+		JPanel pn3 = new JPanel();
+		pn3.setLayout(new BorderLayout());
+		
+		pn3.add(pn1,BorderLayout.WEST);
+		pn3.add(pn2,BorderLayout.CENTER);
+		
+		okbtn = new JButton("찾기");
+		okbtn.addActionListener(this);
+		
+		add(pn3);
+		add(okbtn);
+		setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new FindIdFrame("아이디 찾기");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		Object obj = e.getSource();
+		DB_Conn dc = new DB_Conn();
+		if(obj == okbtn) {
+			 String sql = "SELECT * FROM movieuser WHERE name='" + nametf.getText() + "' and call='" +
+					 				calltf.getText() + "'";
+			 System.out.println(sql);
+			 ResultSet rs = dc.executeQuery(sql);
+			 try {
+					if(rs.next())
+					{
+						String username = rs.getString("name");
+						String usercall = rs.getString("call");
+						String userid = rs.getString("id");
+						System.out.println(usercall);
+						if(nametf.getText().equals(username)&&calltf.getText().equals("0"+usercall))
+						{
+							JOptionPane.showMessageDialog(null, userid);
+							new LoginFrame("CGV 회원 로그인");
+							this.setVisible(false);
+						}
+					}
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			 
+		 
+		}
+		
+	}
+
+	
+
+}

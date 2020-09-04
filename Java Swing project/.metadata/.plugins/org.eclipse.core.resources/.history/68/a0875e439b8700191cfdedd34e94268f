@@ -1,0 +1,53 @@
+package movieproject;
+
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.MalformedInputException;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Timer;
+
+public class Loginani_Frame extends JFrame{
+
+	JScrollPane j;
+
+	public Loginani_Frame(String title) {
+		setTitle(title);
+		setSize(420,250);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+		setLocationRelativeTo(null);
+		
+		JLabel lbl = new JLabel("인하공전 영화예매시스템");
+		lbl.setFont(new Font("Gothic", Font.BOLD,20));
+		lbl.setHorizontalAlignment(JLabel.CENTER);
+		add(lbl);
+		setVisible(true);
+		try {
+			Thread.sleep(4000);
+		}catch(InterruptedException e)
+		{
+			return ;
+		}
+
+		new selectMovie_Frame("인하공전 영화예매시스템",1,"하이염");
+		setVisible(false);
+	
+	}
+			
+
+
+
+	public static void main(String[] args) {
+		
+		new Loginani_Frame("인하공전 영화예매시스템");
+}
+}

@@ -1,0 +1,5 @@
+package movieproject;
+
+public class movienum {
+	int nummovie = 0;
+}

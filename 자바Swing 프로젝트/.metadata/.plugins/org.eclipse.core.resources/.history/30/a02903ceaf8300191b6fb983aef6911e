@@ -1,0 +1,14 @@
+package movieproject;
+
+public class movienum {
+	int nummovie = 0;
+
+	public int getNummovie() {
+		return nummovie;
+	}
+
+	public void setNummovie(int nummovie) {
+		this.nummovie = nummovie;
+	}
+	
+}

@@ -1,0 +1,42 @@
+package movieproject;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import java.*;
+import java.awt.Graphics;
+import java.awt.Image;
+public class movieinfo_Frame extends JFrame{
+	movienum n = new movienum();
+	movienum w = new movienum();
+	ImageIcon icon = new ImageIcon("img/background.jpg");
+	public movieinfo_Frame(String title)
+	{	
+		setTitle(title);
+		setSize(815,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+		setLocationRelativeTo(null);
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g)
+			{	g.drawImage(icon.getImage(), 0,0,null);
+				setOpaque(false);
+				super.paintComponent(g);			
+			}
+
+		
+	};
+	n.setNummovie(5);
+	System.out.println(w.getNummovie());
+	JScrollPane j = new JScrollPane(panel);
+	setContentPane(j);
+	setVisible(true);
+};
+	public static void main(String[] args) {
+		new movieinfo_Frame("인하공전 영화예매시스템");
+	}
+
+}

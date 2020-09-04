@@ -1,0 +1,107 @@
+package movieproject;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+public class search_Frame extends JFrame {
+	DB_Conn dc = new DB_Conn();
+	String userid;
+	String name, place, time, seatnumber,day;
+	ImageIcon icon = new ImageIcon("img/selectback.jpg");
+	private JLabel info1;
+	private JLabel info2;
+	private JLabel info3;
+	private JLabel info4;
+	private JLabel info5;
+	public search_Frame(String title, String id) {
+	userid = id;
+	
+	setTitle(title);
+	setSize(815,640);
+	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 전체 페이지를 끄게 하므로 필요한 페이지에만 쓰자
+	setLocationRelativeTo(null);
+	
+	
+	JPanel panel = new JPanel() {
+		public void paintComponent(Graphics g)
+		{	g.drawImage(icon.getImage(), 0,0,null);
+			setOpaque(false);
+			super.paintComponent(g);			
+		}
+	};
+	
+	panel.setLayout(null);
+	getinfo();
+	
+	info1.setFont(new Font("Dotum",Font.BOLD,25));
+	info1.setForeground(Color.blue);
+	info1.setLocation(115, 210);
+	info1.setSize(info1.getPreferredSize());
+	
+
+	
+	
+	panel.add(info1);panel.add(info2);
+	JScrollPane j = new JScrollPane(panel);
+	setContentPane(j);
+	setVisible(true);
+		
+}
+	private void getinfo() {
+		String sql = "select movieday,watchingtime, moviename, watchingplace,seatnumber  from result where username = '"+userid+"'";
+		ResultSet rs = dc.executeQuery(sql);
+		
+		try {
+			while(rs.next())
+			{
+				if(rs.getRow()==1)
+				{
+					day = rs.getString("movieday"); time = rs.getString("watchingtime"); name = rs.getString("moviename");
+					place = rs.getString("watchingplace"); seatnumber = rs.getString("seatnumber");
+					info1 = new JLabel("1. "+day+" "+time+" "+name+" "+place+" "+seatnumber+"열");
+				}
+				
+				else if(rs.getRow()==2)
+				{
+					day = rs.getString("movieday"); time = rs.getString("watchingtime"); name = rs.getString("moviename");
+					place = rs.getString("watchingplace"); seatnumber = rs.getString("seatnumber");
+					info2 = new JLabel("2. "+day+" "+time+" "+name+" "+place+" "+seatnumber+"열");
+				}
+				else if(rs.getRow()==3)
+				{
+					day = rs.getString("movieday"); time = rs.getString("watchingtime"); name = rs.getString("moviename");
+					place = rs.getString("watchingplace"); seatnumber = rs.getString("seatnumber");
+					info3 = new JLabel("3. "+day+" "+time+" "+name+" "+place+" "+seatnumber+"열");
+				}
+				else if(rs.getRow()==4)
+				{
+					day = rs.getString("movieday"); time = rs.getString("watchingtime"); name = rs.getString("moviename");
+					place = rs.getString("watchingplace"); seatnumber = rs.getString("seatnumber");
+					info4 = new JLabel("4. "+day+" "+time+" "+name+" "+place+" "+seatnumber+"열");
+				}
+				else if(rs.getRow()==5)
+				{
+					day = rs.getString("movieday"); time = rs.getString("watchingtime"); name = rs.getString("moviename");
+					place = rs.getString("watchingplace"); seatnumber = rs.getString("seatnumber");
+					info5 = new JLabel("5. "+day+" "+time+" "+name+" "+place+" "+seatnumber+"열");
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public static void main(String[] args) {
+		new search_Frame("인하공전 영화예매시스템","201645032");
+	}
+}

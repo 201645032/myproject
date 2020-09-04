@@ -1,0 +1,209 @@
+package movieproject;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+public class confirmovie_Frame extends JFrame implements ActionListener{
+	DB_Conn dc = new DB_Conn();
+	int custid;
+	String userid;
+	int movienum;
+	JButton btnbuy;
+	JButton btncancel;
+	ImageIcon icon = new ImageIcon("img/con_background.jpg");
+	ImageIcon buy = new ImageIcon("img/letsbuy.png");
+	ImageIcon r_buy = new ImageIcon("img/letsbuy_on.png");
+	ImageIcon cancel = new ImageIcon("img/cancel.png");
+	ImageIcon r_cancel = new ImageIcon("img/cancel_on.png");
+	String updatesql;
+	String seatstring;
+	ResultSet rs;
+	String name, place, time,day;
+	int totalprice;
+	
+	public confirmovie_Frame(String title, int num, int custnum, String id, String seat)
+	{
+		custid = custnum;
+		userid = id;
+		movienum = num;
+		seatstring = seat;
+		setTitle(title);
+		setSize(815,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		setLocationRelativeTo(null);
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g)
+			{	g.drawImage(icon.getImage(), 0,0,null);
+				setOpaque(false);
+				super.paintComponent(g);			
+			}				
+		};
+		
+		panel.setLayout(null);
+		getuserinfo();
+		JLabel moviename = new JLabel(name);
+		JLabel movieplace = new JLabel(place);
+		JLabel movietime = new JLabel(time);
+		JLabel movieday = new JLabel(day);
+		JLabel seatnumber = new JLabel(seatstring);
+		
+		
+		int j2 = seatstring.length()/2;
+		totalprice = j2*6000;
+		JLabel price = new JLabel(Integer.toString(totalprice)+"원");
+		price.setFont(new Font("Dotum",Font.BOLD,40));
+		price.setForeground(Color.white);
+		price.setLocation(615, 290);
+		price.setSize(price.getPreferredSize());
+		
+		moviename.setFont(new Font("Dotum",Font.BOLD,30));
+		moviename.setForeground(Color.white);
+		moviename.setLocation(150, 175);
+		moviename.setSize(moviename.getPreferredSize());
+		
+		movieplace.setFont(new Font("Dotum",Font.BOLD,30));
+		movieplace.setForeground(Color.white);
+		movieplace.setLocation(405, 179);
+		movieplace.setSize(movieplace.getPreferredSize());
+		
+		movietime.setFont(new Font("Dotum",Font.BOLD,30));
+		movietime.setForeground(Color.white);
+		movietime.setLocation(610, 179);
+		movietime.setSize(movietime.getPreferredSize());
+		
+		seatnumber.setFont(new Font("Dotum",Font.BOLD,40));
+		seatnumber.setForeground(Color.white);
+		seatnumber.setLocation(180, 290);
+		seatnumber.setSize(seatnumber.getPreferredSize());
+		
+		movieday.setFont(new Font("Dotum",Font.BOLD,50));
+		movieday.setForeground(Color.white);
+		movieday.setLocation(60, 90);
+		movieday.setSize(movieday.getPreferredSize());
+		
+		
+		
+		
+		btnbuy = new JButton(buy);
+		btnbuy.setRolloverIcon(r_buy);
+		btnbuy.setBorderPainted(false);
+		btnbuy.setFocusPainted(false);
+		btnbuy.setContentAreaFilled(false);
+		
+		btnbuy.setLocation(134,460);
+		btnbuy.setSize(btnbuy.getPreferredSize());
+
+		btncancel = new JButton(cancel);
+		btncancel.setRolloverIcon(r_cancel);
+		btncancel.setBorderPainted(false);
+		btncancel.setFocusPainted(false);
+		btncancel.setContentAreaFilled(false);
+
+		
+		btncancel.setLocation(461,460);
+		btncancel.setSize(btncancel.getPreferredSize());
+		
+		btnbuy.addActionListener(this);
+		btncancel.addActionListener(this);
+		
+		
+		panel.add(moviename); panel.add(movieplace); panel.add(movietime); panel.add(seatnumber); panel.add(movieday);
+		panel.add(price);
+		panel.add(btnbuy);
+		panel.add(btncancel);
+		JScrollPane j = new JScrollPane(panel);
+		setContentPane(j);
+		setVisible(true); // 출력 부분
+	}
+	
+	public static void main(String[] args) {
+		new confirmovie_Frame("인하공전 영화예매시스템", 11, 2, "201645032","");
+	}
+
+	
+	private void getuserinfo() {
+		String sql = "select moviename, watchingplace, watchingtime, seatnumber, movieday from result where custid = '"+custid+"'";
+		rs = dc.executeQuery(sql);
+		try {
+			while(rs.next())
+			{	
+				name = rs.getString("moviename");
+				place = rs.getString("watchingplace");
+				time = rs.getString("watchingtime");
+				day = rs.getString("movieday");
+				System.out.println(name);
+				System.out.println(place);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object obj = e.getSource();
+		if(obj == btnbuy)
+		{
+			this.updatesql = "select custid from result where seatnumber = '"+seatstring+"'and username = '"+userid+"'";
+			selectsql();
+			new receipt_Frame("인하공전 영화예매시스템", movienum, custid, userid, seatstring);
+			setVisible(false);
+		}
+		else if(obj == btncancel)
+		{	
+			String sql = "update result set moviename = null, watchingplace = null, watchingtime = null, seatnumber = null, totalprice = null where custid = '"+custid+"'";
+			dc.executeUpdate(sql);
+			new selectMovie_Frame("인하공전 영화예매시스템", custid,userid);
+			setVisible(false);
+		}
+	}
+
+	private void selectsql() {
+		rs = dc.executeQuery(this.updatesql);
+		try {
+			while(rs.next())
+			{
+				custid = rs.getInt("custid");
+				String sql2 = "select seatnumber,moviename,watchingtime,movieday from result where custid = '"+custid+"'";
+				rs = dc.executeQuery(sql2);
+				while(rs.next())
+				{
+					String changeseat = rs.getString("seatnumber");
+					String moviename = rs.getString("moviename");
+					String movietime = rs.getString("watchingtime");
+					String movieday = rs.getString("movieday");
+					int changeseatnum = changeseat.length() / 2;
+					String sql_1 = "select seat from movie where (name = '"+moviename+"' and time='"+movietime+"')and day = '" + movieday+"'";
+					ResultSet r = dc.executeQuery(sql_1);
+					while(r.next())
+					{
+						int cstnum = r.getInt("seat");
+						int result = cstnum - changeseatnum;
+					String sql3 = "update movie set seat = '"+result+"' where (name= '"+moviename+"' and time ='"+movietime+"') and day = '"+movieday+"'";
+					dc.executeUpdate(sql3);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+			
+}
+

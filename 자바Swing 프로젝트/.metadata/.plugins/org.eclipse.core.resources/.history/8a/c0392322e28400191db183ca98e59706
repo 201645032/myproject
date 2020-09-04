@@ -1,0 +1,51 @@
+package movieproject;
+
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.nio.charset.MalformedInputException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.Timer;
+
+public class Loginani_Frame extends JFrame{
+	Image icon;
+	
+	Loginani_Frame() throws MalformedInputException
+	{
+		icon = Toolkit.getDefaultToolkit().createImage("img/loginani.gif");
+	}
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponents(g);
+		if(icon !=null)
+		{
+			g.drawImage(icon,0,0,this);
+		}
+	}
+
+
+//	public Loginani_Frame(String title)
+//	{	
+//		setTitle(title);
+//		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		setSize(400,243);
+//		setLocationRelativeTo(null);
+//	}
+	
+	
+		
+
+
+
+	public static void main(String[] args) {
+		
+				
+
+}
+}

@@ -1,0 +1,107 @@
+package movieproject;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+public class receipt_Frame extends JFrame {
+	DB_Conn dc = new DB_Conn();
+	int custid;
+	String userid;
+	String seatstring;
+	int movienum;
+	String name, place, time, seatnumber;
+	ImageIcon icon = new ImageIcon("img/receip15.jpg");
+	ImageIcon icon2 = new ImageIcon("img/receip12.jpg");
+	
+	public receipt_Frame(String title, int num, int custnum, String id, String seat)
+	{
+		custid = custnum;
+		userid = id;
+		movienum = num;
+		seatstring = seat;
+		setTitle(title);
+		setSize(815,640);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		setLocationRelativeTo(null);
+		
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g) {
+				if(movienum == 14 || movienum == 24 || movienum == 34 || movienum == 44)
+				{
+				g.drawImage(icon2.getImage(), 0,0,null);
+				}
+				else
+				{
+				g.drawImage(icon.getImage(), 0,0,null);
+				}
+				setOpaque(false);
+				super.paintComponent(g);			
+			}	
+			
+		};
+		
+		getuserinfo();
+		JLabel moviename = new JLabel(name);
+		JLabel movieplace = new JLabel(place);
+		JLabel movietime = new JLabel(time);
+		JLabel seatnumber = new JLabel(seatstring);
+		panel.setLayout(null);
+		
+		moviename.setFont(new Font("Dotum",Font.BOLD,50));
+		moviename.setForeground(Color.black);
+		moviename.setLocation(260, 230);
+		moviename.setSize(moviename.getPreferredSize());
+		
+		movieplace.setFont(new Font("Dotum",Font.BOLD,30));
+		movieplace.setForeground(Color.white);
+		movieplace.setLocation(405, 179);
+		movieplace.setSize(movieplace.getPreferredSize());
+		
+		movietime.setFont(new Font("Dotum",Font.BOLD,40));
+		movietime.setForeground(Color.black);
+		movietime.setLocation(510, 240);
+		movietime.setSize(movietime.getPreferredSize());
+		
+		seatnumber.setFont(new Font("Dotum",Font.BOLD,50));
+		seatnumber.setForeground(Color.white);
+		seatnumber.setLocation(480, 300);
+		seatnumber.setSize(seatnumber.getPreferredSize());
+		
+		panel.add(moviename); panel.add(movieplace); panel.add(movietime); panel.add(seatnumber);
+		
+		
+		JScrollPane j = new JScrollPane(panel);
+		setContentPane(j);
+		setVisible(true); // 출력 부분
+	}
+	private void getuserinfo() {
+		String sql = "select moviename, watchingplace, watchingtime, seatnumber from result where custid = '"+custid+"'";
+		ResultSet rs = dc.executeQuery(sql);
+		try {
+			while(rs.next())
+			{	
+				name = rs.getString("moviename");
+				place = rs.getString("watchingplace");
+				time = rs.getString("watchingtime");
+			}
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	}
+		
+	
+	public static void main(String[] args) {
+		new receipt_Frame("인하공전 영화예매시스템", 11, 2, "201645032", "A1A2");
+	}
+	
+}
